@@ -53,12 +53,30 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(width: 10),
               ],
             ),
-          Text('Selecione a Marca', textAlign: TextAlign.center, style: TextStyle(fontSize: 25.0),),
           DropdownButton(
+            isExpanded: true,
             value: null,
+            iconSize: 30,
             items: null,
             onChanged: null,
-          )
+            hint: Text('Selecione a Marca'),
+          ),
+            DropdownButton(
+              isExpanded: true,
+              value: null,
+              iconSize: 30,
+              items: null,
+              onChanged: null,
+              hint: Text('Selecione o Modelo'),
+            ),
+            DropdownButton(
+              isExpanded: true,
+              value: null,
+              iconSize: 30,
+              items: null,
+              onChanged: null,
+              hint: Text('Selecione o Ano'),
+            )
           ],
         ),
       ),
