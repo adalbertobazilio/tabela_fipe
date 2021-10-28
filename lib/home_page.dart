@@ -19,6 +19,13 @@ class _HomePageState extends State<HomePage> {
   List ListaModelos = [];
   List ListaAnos = [];
   List Valor = [];
+  String MarcaTexto = '';
+  String ModeloTexto = '';
+  String AnoModeloTexto = '';
+  String CombustivelTexto = '';
+  String FipeTexto = '';
+  String MesRefTexto = '';
+  String ValorTexto = '';
 
   Future<String> pegarMarcas() async {
     var url = Uri.parse('');
@@ -89,10 +96,23 @@ class _HomePageState extends State<HomePage> {
     var resBody = json.decode(res.body);
 
     setState(() {
-      Valor = resBody;
+      MarcaTexto = resBody["Marca"];
+      ModeloTexto = resBody["Modelo"];
+      int AnoMod = resBody["AnoModelo"];
+      AnoModeloTexto = AnoMod.toString();
+      CombustivelTexto = resBody["Combustivel"];
+      FipeTexto = resBody["CodigoFipe"];
+      MesRefTexto = resBody["MesReferencia"];
+      ValorTexto = resBody["Valor"];
     });
 
     return "Sucess";
+  }
+
+  @override
+  void initState() {
+    pegarMarcas();
+    super.initState();
   }
 
 
@@ -272,6 +292,69 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 30,
             ),
+            Row(
+                children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
+                child: Text('Marca: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
+              ),
+                   Text(MarcaTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
+            ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
+                  child: Text('Modelo: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
+                ),
+                Text(ModeloTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
+                  child: Text('Ano: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
+                ),
+                Text(AnoModeloTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
+                  child: Text('Combustível: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
+                ),
+                Text(CombustivelTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
+                  child: Text('Código Fipe: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
+                ),
+                Text(FipeTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
+                  child: Text('Mês Referência: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
+                ),
+                Text(MesRefTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
+              ],
+            ),
+            Row(
+              children: [
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
+                  child: Text('Valor: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
+                ),
+                Text(ValorTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
+              ],
+            )
           ],
         ),
       ),
