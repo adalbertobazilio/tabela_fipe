@@ -10,16 +10,15 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-
 class _HomePageState extends State<HomePage> {
-
-
   String tipobusca = 'carro';
   String Marca = '1';
   String Modelo = '';
   String Ano = '';
   List ListaMarcas = [];
-
+  List ListaModelos = [];
+  List ListaAnos = [];
+  List Valor = [];
 
   Future<String> pegarMarcas() async {
     var url = Uri.parse('');
@@ -28,24 +27,76 @@ class _HomePageState extends State<HomePage> {
     } else {
       url = Uri.parse('https://parallelum.com.br/fipe/api/v1/motos/marcas');
     }
-    var res = await http
-        .get(url);
+    var res = await http.get(url);
     var resBody = json.decode(res.body);
 
     setState(() {
       ListaMarcas = resBody;
     });
 
-    //print(resBody);
+    return "Sucess";
+  }
+
+  Future<String> pegarModelos() async {
+    var url = Uri.parse('');
+    if (tipobusca == 'carro') {
+      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/carros/marcas/'+ Marca +'/modelos');
+    } else {
+      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/motos/marcas/'+ Marca +'/modelos');
+    }
+    var res = await http.get(url);
+    Map<String, dynamic> resBody = json.decode(res.body);
+    List<dynamic> Lista = resBody['modelos'];
+    //var resBody = json.decode(res.body);
+
+    print(Lista);
+
+    setState(() {
+      int Codigo = Lista[0]["codigo"];
+      Modelo = Codigo.toString();
+    });
+
+    setState(() {
+
+      ListaModelos = Lista;
+    });
+    print(Modelo);
+    return "Sucess";
+  }
+
+  Future<String> pegarAnos() async {
+    var url = Uri.parse('');
+    if (tipobusca == 'carro') {
+      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + Marca +'/modelos/' + Modelo +'/anos');
+    } else {
+      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/motos/marcas/' + Marca +'/modelos/' + Modelo +'/anos');
+    }
+    var res = await http.get(url);
+    var resBody = json.decode(res.body);
+
+    setState(() {
+      ListaAnos = resBody;
+    });
 
     return "Sucess";
   }
 
+  Future<String> pegarValor() async {
+    var url = Uri.parse('');
+    if (tipobusca == 'carro') {
+      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + Marca +'/modelos/' + Modelo +'/anos/' + Ano);
+    } else {
+      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/motos/marcas/' + Marca +'/modelos/' + Modelo +'/anos/' + Ano);
+    }
+    var res = await http.get(url);
+    var resBody = json.decode(res.body);
 
+    setState(() {
+      Valor = resBody;
+    });
 
-
-
-
+    return "Sucess";
+  }
 
 
   @override
@@ -73,6 +124,8 @@ class _HomePageState extends State<HomePage> {
                   onChanged: (value) {
                     setState(() {
                       tipobusca = 'carro';
+                      Marca = '1';
+                      pegarMarcas();
                     });
                   },
                 ),
@@ -84,6 +137,8 @@ class _HomePageState extends State<HomePage> {
                   onChanged: (value) {
                     setState(() {
                       tipobusca = 'moto';
+                      Marca = '60';
+                      pegarMarcas();
                     });
                   },
                 ),
@@ -91,36 +146,93 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(width: 10),
               ],
             ),
-            FutureBuilder(
-                future: pegarMarcas(),
-                builder: (context, snapshot) {
-                  return DropdownButton<String>(
-                      hint: Text("Selecione a Marca"),
-                      value: Marca,
-                      items: ListaMarcas.map((item) {
-                        return  DropdownMenuItem(
-                          child:  Text(item['nome']),
-                          value: item['codigo'].toString(),
-                        );
-                      }).toList(),
-
-                    onChanged: (value) {
-                      setState(() {
-                        Marca = value as String;
-                      });
-                    },
-
-                  );
-                }),
-
-            DropdownButton(
-              isExpanded: true,
-              value: Modelo,
-              iconSize: 30,
-              hint: Text('Selecione o Modelo'),
-              onChanged: null,
-              items: null,
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: DropdownButtonHideUnderline(
+                      child: ButtonTheme(
+                        alignedDropdown: true,
+                        child: DropdownButton<String>(
+                          value: Marca,
+                          iconSize: 30,
+                          icon: (null),
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                          ),
+                          hint: Text('Selecione a Marca'),
+                          onChanged: (newValue) {
+                            setState(() {
+                              Marca = newValue as String;
+                              print(Marca);
+                              pegarModelos();
+                            });
+                          },
+                          items: ListaMarcas.map((item) {
+                            return  DropdownMenuItem(
+                              child:  Text(item['nome']),
+                              value: item['codigo'].toString(),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+            SizedBox(
+              height: 30,
+            ),
+
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: DropdownButtonHideUnderline(
+                      child: ButtonTheme(
+                        alignedDropdown: true,
+                        child: DropdownButton<String>(
+                          value: Modelo,
+                          iconSize: 30,
+                          icon: (null),
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                          ),
+                          hint: Text('Selecione o Modelo'),
+                          onChanged: (newValue) {
+                            setState(() {
+                              Modelo = newValue as String;
+                              pegarAnos();
+                              print(Modelo);
+                            });
+                          },
+                          items: ListaModelos.map((item) {
+                            return  DropdownMenuItem(
+                              child:  Text(item['nome']),
+                              value: item['codigo'].toString(),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+
+
             DropdownButton(
               isExpanded: true,
               value: Ano,
