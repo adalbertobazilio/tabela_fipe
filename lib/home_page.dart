@@ -54,10 +54,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       int Codigo = Lista[0]["codigo"];
       Modelo = Codigo.toString();
-    });
-
-    setState(() {
-
       ListaModelos = Lista;
     });
     print(Modelo);
@@ -75,6 +71,7 @@ class _HomePageState extends State<HomePage> {
     var resBody = json.decode(res.body);
 
     setState(() {
+      Ano = resBody[0]["codigo"];
       ListaAnos = resBody;
     });
 
@@ -233,14 +230,48 @@ class _HomePageState extends State<HomePage> {
             ),
 
 
-            DropdownButton(
-              isExpanded: true,
-              value: Ano,
-              iconSize: 30,
-              hint: Text('Selecione o Ano'),
-              onChanged: null,
-              items: null,
-            )
+            Container(
+              padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: DropdownButtonHideUnderline(
+                      child: ButtonTheme(
+                        alignedDropdown: true,
+                        child: DropdownButton<String>(
+                          value: Ano,
+                          iconSize: 30,
+                          icon: (null),
+                          style: TextStyle(
+                            color: Colors.black54,
+                            fontSize: 16,
+                          ),
+                          hint: Text('Selecione o Ano'),
+                          onChanged: (newValue) {
+                            setState(() {
+                              Ano = newValue as String;
+                              pegarValor();
+                              print(Ano);
+                            });
+                          },
+                          items: ListaAnos.map((item) {
+                            return  DropdownMenuItem(
+                              child:  Text(item['nome']),
+                              value: item['codigo'].toString(),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
           ],
         ),
       ),
