@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String tipobusca = 'carro';
-  String Marca = '1';
+  String Marca = '';
   String Modelo = '';
   String Ano = '';
   List ListaMarcas = [];
@@ -27,6 +27,18 @@ class _HomePageState extends State<HomePage> {
   String MesRefTexto = '';
   String ValorTexto = '';
 
+  void ZeraLabels(){
+    setState(() {
+      MarcaTexto = '';
+      ModeloTexto = '';
+      AnoModeloTexto = '';
+      CombustivelTexto = '';
+      FipeTexto = '';
+      MesRefTexto = '';
+      ValorTexto = '';
+    });
+  }
+
   Future<String> pegarMarcas() async {
     var url = Uri.parse('');
     if (tipobusca == 'carro') {
@@ -38,6 +50,7 @@ class _HomePageState extends State<HomePage> {
     var resBody = json.decode(res.body);
 
     setState(() {
+      Marca = resBody[0]["codigo"];
       ListaMarcas = resBody;
     });
 
@@ -54,16 +67,12 @@ class _HomePageState extends State<HomePage> {
     var res = await http.get(url);
     Map<String, dynamic> resBody = json.decode(res.body);
     List<dynamic> Lista = resBody['modelos'];
-    //var resBody = json.decode(res.body);
-
-    print(Lista);
 
     setState(() {
       int Codigo = Lista[0]["codigo"];
       Modelo = Codigo.toString();
       ListaModelos = Lista;
     });
-    print(Modelo);
     return "Sucess";
   }
 
@@ -140,9 +149,13 @@ class _HomePageState extends State<HomePage> {
                   groupValue: tipobusca,
                   onChanged: (value) {
                     setState(() {
+                      ListaMarcas = [];
                       tipobusca = 'carro';
                       Marca = '1';
                       pegarMarcas();
+                      ListaAnos = [];
+                      ListaModelos = [];
+                      ZeraLabels();
                     });
                   },
                 ),
@@ -153,9 +166,13 @@ class _HomePageState extends State<HomePage> {
                   groupValue: tipobusca,
                   onChanged: (value) {
                     setState(() {
+                      ListaMarcas = [];
                       tipobusca = 'moto';
                       Marca = '60';
                       pegarMarcas();
+                      ListaAnos = [];
+                      ListaModelos = [];
+                      ZeraLabels();
                     });
                   },
                 ),
@@ -175,6 +192,7 @@ class _HomePageState extends State<HomePage> {
                         alignedDropdown: true,
                         child: DropdownButton<String>(
                           value: Marca,
+                          isExpanded: true,
                           iconSize: 30,
                           icon: (null),
                           style: TextStyle(
@@ -185,8 +203,9 @@ class _HomePageState extends State<HomePage> {
                           onChanged: (newValue) {
                             setState(() {
                               Marca = newValue as String;
-                              print(Marca);
                               pegarModelos();
+                              ListaAnos = [];
+                              ZeraLabels();
                             });
                           },
                           items: ListaMarcas.map((item) {
@@ -216,20 +235,23 @@ class _HomePageState extends State<HomePage> {
                     child: DropdownButtonHideUnderline(
                       child: ButtonTheme(
                         alignedDropdown: true,
+
                         child: DropdownButton<String>(
                           value: Modelo,
+                          isExpanded: true,
                           iconSize: 30,
                           icon: (null),
                           style: TextStyle(
                             color: Colors.black54,
                             fontSize: 16,
+
                           ),
                           hint: Text('Selecione o Modelo'),
                           onChanged: (newValue) {
                             setState(() {
                               Modelo = newValue as String;
                               pegarAnos();
-                              print(Modelo);
+                              ZeraLabels();
                             });
                           },
                           items: ListaModelos.map((item) {
@@ -262,6 +284,7 @@ class _HomePageState extends State<HomePage> {
                         alignedDropdown: true,
                         child: DropdownButton<String>(
                           value: Ano,
+                          isExpanded: true,
                           iconSize: 30,
                           icon: (null),
                           style: TextStyle(
@@ -273,7 +296,6 @@ class _HomePageState extends State<HomePage> {
                             setState(() {
                               Ano = newValue as String;
                               pegarValor();
-                              print(Ano);
                             });
                           },
                           items: ListaAnos.map((item) {
@@ -298,7 +320,7 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
                 child: Text('Marca: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
               ),
-                   Text(MarcaTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
+                   Text(MarcaTexto, overflow: TextOverflow.fade, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
             ],
             ),
             Row(
@@ -307,7 +329,11 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
                   child: Text('Modelo: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
                 ),
-                Text(ModeloTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
+                SizedBox(
+                  width: 285.0,
+                  child:
+                Text(ModeloTexto, overflow: TextOverflow.ellipsis, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18, )),
+                )
               ],
             ),
             Row(
