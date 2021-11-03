@@ -15,6 +15,8 @@ class _HomePageState extends State<HomePage> {
   String Marca = '';
   String Modelo = '';
   String Ano = '';
+  String LinkMoto = 'https://parallelum.com.br/fipe/api/v1/motos/marcas';
+  String LinkCarro = 'https://parallelum.com.br/fipe/api/v1/carros/marcas';
   List ListaMarcas = [];
   List ListaModelos = [];
   List ListaAnos = [];
@@ -26,6 +28,21 @@ class _HomePageState extends State<HomePage> {
   String FipeTexto = '';
   String MesRefTexto = '';
   String ValorTexto = '';
+
+  CreateLabel(String label, String Resultado) {
+    return Row(
+      children: [
+        Padding(
+          padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
+          child: Text(label + ': ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
+        ),
+        Expanded(
+          child:
+          Text(Resultado, maxLines: 2, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18,)),
+        )
+      ],
+    );
+  }
 
   void ZeraLabels(){
     setState(() {
@@ -42,9 +59,9 @@ class _HomePageState extends State<HomePage> {
   Future<String> pegarMarcas() async {
     var url = Uri.parse('');
     if (tipobusca == 'carro') {
-      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/carros/marcas');
+      url = Uri.parse(LinkCarro);
     } else {
-      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/motos/marcas');
+      url = Uri.parse(LinkMoto);
     }
     var res = await http.get(url);
     var resBody = json.decode(res.body);
@@ -60,9 +77,9 @@ class _HomePageState extends State<HomePage> {
   Future<String> pegarModelos() async {
     var url = Uri.parse('');
     if (tipobusca == 'carro') {
-      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/carros/marcas/'+ Marca +'/modelos');
+      url = Uri.parse(LinkCarro + '/' + Marca +'/modelos');
     } else {
-      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/motos/marcas/'+ Marca +'/modelos');
+      url = Uri.parse(LinkMoto + '/' + Marca +'/modelos');
     }
     var res = await http.get(url);
     Map<String, dynamic> resBody = json.decode(res.body);
@@ -79,9 +96,9 @@ class _HomePageState extends State<HomePage> {
   Future<String> pegarAnos() async {
     var url = Uri.parse('');
     if (tipobusca == 'carro') {
-      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + Marca +'/modelos/' + Modelo +'/anos');
+      url = Uri.parse(LinkCarro + '/' + Marca +'/modelos/' + Modelo +'/anos');
     } else {
-      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/motos/marcas/' + Marca +'/modelos/' + Modelo +'/anos');
+      url = Uri.parse(LinkMoto + '/' + Marca +'/modelos/' + Modelo +'/anos');
     }
     var res = await http.get(url);
     var resBody = json.decode(res.body);
@@ -97,9 +114,9 @@ class _HomePageState extends State<HomePage> {
   Future<String> pegarValor() async {
     var url = Uri.parse('');
     if (tipobusca == 'carro') {
-      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/carros/marcas/' + Marca +'/modelos/' + Modelo +'/anos/' + Ano);
+      url = Uri.parse(LinkCarro + '/' + Marca +'/modelos/' + Modelo +'/anos/' + Ano);
     } else {
-      url = Uri.parse('https://parallelum.com.br/fipe/api/v1/motos/marcas/' + Marca +'/modelos/' + Modelo +'/anos/' + Ano);
+      url = Uri.parse(LinkMoto + '/' + Marca +'/modelos/' + Modelo +'/anos/' + Ano);
     }
     var res = await http.get(url);
     var resBody = json.decode(res.body);
@@ -314,73 +331,13 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 30,
             ),
-            Row(
-                children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
-                child: Text('Marca: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
-              ),
-                   Text(MarcaTexto, overflow: TextOverflow.fade, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
-            ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
-                  child: Text('Modelo: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
-                ),
-                SizedBox(
-                  width: 285.0,
-                  child:
-                Text(ModeloTexto, overflow: TextOverflow.ellipsis, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18, )),
-                )
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
-                  child: Text('Ano: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
-                ),
-                Text(AnoModeloTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
-                  child: Text('Combustível: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
-                ),
-                Text(CombustivelTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
-                  child: Text('Código Fipe: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
-                ),
-                Text(FipeTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
-                  child: Text('Mês Referência: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
-                ),
-                Text(MesRefTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 10.0, 5.0,5.0),
-                  child: Text('Valor: ', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 16)),
-                ),
-                Text(ValorTexto, textAlign: TextAlign.left,style: TextStyle(color: Colors.deepPurple, fontSize: 18)),
-              ],
-            )
+            CreateLabel('Marca', MarcaTexto),
+            CreateLabel('Modelo', ModeloTexto),
+            CreateLabel('Ano', AnoModeloTexto),
+            CreateLabel('Combustível', CombustivelTexto),
+            CreateLabel('Código Fipe', FipeTexto),
+            CreateLabel('Mês Referência', MesRefTexto),
+            CreateLabel('Valor', ValorTexto)
           ],
         ),
       ),
